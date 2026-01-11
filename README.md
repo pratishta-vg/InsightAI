@@ -88,7 +88,7 @@ The goal is to provide a lightweight but powerful demo of a multimodal RAG syste
 ### 2. Clone the Repository
 
 ```bash
-git clone https://github.com/pratishta-vg/InsightAI.git)
+git clone https://github.com/<your-username>/InsightAI.git
 cd InsightAI
 ```
 
