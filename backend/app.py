@@ -9,6 +9,7 @@ from pinecone_client import text_index, image_index
 import json
 import io
 import uuid
+import os
 
 app = FastAPI()
 
@@ -47,11 +48,21 @@ async def youtube_ingest(payload: dict):
 
     try:
         from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled, NoTranscriptFound
+        from youtube_transcript_api.proxies import WebshareProxyConfig
     except ImportError:
         return {"error": "youtube-transcript-api is not installed on the server."}
 
     try:
-        api = YouTubeTranscriptApi()
+        proxy_username = os.getenv("WEBSHARE_USERNAME")
+        proxy_password = os.getenv("WEBSHARE_PASSWORD")
+        if proxy_username and proxy_password:
+            proxy_config = WebshareProxyConfig(
+                proxy_username=proxy_username,
+                proxy_password=proxy_password,
+            )
+            api = YouTubeTranscriptApi(proxy_config=proxy_config)
+        else:
+            api = YouTubeTranscriptApi()
         fetched = api.fetch(
             video_id,
             languages=["en", "en-US", "en-GB", "en-IN"],
